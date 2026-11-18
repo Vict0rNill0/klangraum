@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f3f0ff" />
+    <meta
+      name="description"
+      content="Mikrofon verstärken, Stimmen aufnehmen und Musik abspielen. Dein Klangraum direkt im Browser."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; frame-src https://www.youtube-nocookie.com; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'"
+    />
+    <title>Klangraum · Mikrofon & Musik</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <symbol id="i-mic" viewBox="0 0 24 24">
+          <rect x="8" y="2" width="8" height="13" rx="4" />
+          <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8" />
+        </symbol>
+        <symbol id="i-music" viewBox="0 0 24 24">
+          <path d="M9 18V5l12-3v13M9 9l12-3" />
+          <ellipse cx="5.5" cy="18.5" rx="3.5" ry="2.5" />
+          <ellipse cx="17.5" cy="15.5" rx="3.5" ry="2.5" />
+        </symbol>
+        <symbol id="i-volume" viewBox="0 0 24 24">
+          <path
+            d="m11 4-6 5H2v6h3l6 5zM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16"
+          />
+        </symbol>
+        <symbol id="i-mute" viewBox="0 0 24 24">
+          <path d="m11 4-6 5H2v6h3l6 5zM16 9l6 6M22 9l-6 6" />
+        </symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
+        </symbol>
+        <symbol id="i-trash" viewBox="0 0 24 24">
+          <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+        </symbol>
+        <symbol id="i-folder" viewBox="0 0 24 24">
+          <path d="M3 7V4h6l3 3h9v13H3zM12 11v6m-3-3 3-3 3 3" />
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 24 24">
+          <path d="m9 5 11 7-11 7z" />
+        </symbol>
+        <symbol id="i-close" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v6M12 7v1" />
+        </symbol>
+      </defs>
+    </svg>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="./" aria-label="Klangraum Startseite"
+          ><span class="brand-mark" aria-hidden="true"
+            ><i></i><i></i><i></i><i></i><i></i></span
+          >Klangraum<span class="brand-dot">.</span></a
+        >
+        <div class="header-actions">
+          <button id="info-open" class="button quiet" aria-label="Info">
+            <svg><use href="#i-info" /></svg><span>Info</span></button
+          ><button id="silence" class="button silence" aria-label="Alles stumm">
+            <svg><use href="#i-mute" /></svg><span>Alles stumm</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <div class="intro">
+          <h1>Dein Moment. Dein Sound.</h1>
+          <span class="session-tag"><span></span>Hier & jetzt</span>
+        </div>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <div class="desk">
+          <section class="panel microphone" aria-labelledby="mic-heading">
+            <div class="section-heading">
+              <span class="section-icon"
+                ><svg><use href="#i-mic" /></svg
+              ></span>
+              <h2 id="mic-heading">Mikrofon</h2>
+              <span id="mic-status" class="status-pill">Aus</span>
+            </div>
+            <div class="visualizer">
+              <canvas
+                id="visualizer"
+                aria-label="Mikrofonpegel"
+                role="img"
+              ></canvas
+              ><span id="level-label">Bereit, wenn du es bist.</span>
+            </div>
+            <div id="mic-inputs"></div>
+            <button id="add-mic" class="button add-input" disabled>
+              <svg><use href="#i-plus" /></svg>Weiteres Mikrofon
+            </button>
+            <div class="monitor-box">
+              <div class="monitor-heading">
+                <div>
+                  <svg><use href="#i-volume" /></svg><span>Verstärkung</span>
+                </div>
+                <button
+                  id="monitor"
+                  class="toggle"
+                  role="switch"
+                  aria-checked="false"
+                  aria-label="Verstärkung"
+                  disabled
+                >
+                  <span></span>
+                </button>
+              </div>
+              <div class="range-row">
+                <label for="mic-volume">Lautstärke</label
+                ><input
+                  type="range"
+                  id="mic-volume"
+                  min="0"
+                  max="100"
+                  value="25"
+                /><output id="mic-volume-value" for="mic-volume">25 %</output>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel recording" aria-labelledby="record-heading">
+            <div class="section-heading">
+              <span class="section-icon"
+                ><span class="record-glyph"></span
+              ></span>
+              <h2 id="record-heading">Aufnahme</h2>
+              <span id="clip-count" class="status-pill">0 Clips</span>
+            </div>
+            <div class="record-station">
+              <div
+                id="record-time"
+                class="record-time"
+                aria-label="Aufnahmedauer"
+              >
+                00:00
+              </div>
+              <button id="record" class="record-button" disabled>
+                <span class="record-dot"></span
+                ><span id="record-label">Aufnahme starten</span></button
+              ><span id="record-hint" class="record-hint"
+                >Zuerst Mikrofon aktivieren</span
+              >
+            </div>
+            <div class="clips-heading">
+              <h3>Deine Clips</h3>
+              <span>Nur in diesem Tab</span>
+            </div>
+            <div id="clips" class="clips">
+              <div id="empty-clips" class="empty-clips">
+                <span class="empty-wave" aria-hidden="true">▂ ▅ ▃ ▇ ▃ ▅ ▂</span>
+                <p>Hier spielt gleich deine Stimme.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel music" aria-labelledby="music-heading">
+            <div class="section-heading">
+              <span class="section-icon"
+                ><svg><use href="#i-music" /></svg
+              ></span>
+              <h2 id="music-heading">Musik</h2>
+            </div>
+            <div class="music-tabs" role="tablist" aria-label="Musikquelle">
+              <button
+                id="file-tab"
+                role="tab"
+                aria-selected="true"
+                aria-controls="file-panel"
+                tabindex="0"
+              >
+                Audiodatei</button
+              ><button
+                id="youtube-tab"
+                role="tab"
+                aria-selected="false"
+                aria-controls="youtube-panel"
+                tabindex="-1"
+              >
+                YouTube
+              </button>
+            </div>
+            <div id="file-panel" role="tabpanel" aria-labelledby="file-tab">
+              <label class="drop-zone" id="drop-zone" for="music-file"
+                ><span class="file-icon"
+                  ><svg><use href="#i-folder" /></svg></span
+                ><span>Musik öffnen</span><small>MP3, WAV & mehr</small
+                ><input
+                  type="file"
+                  id="music-file"
+                  accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.opus"
+                  class="file-input"
+              /></label>
+              <div id="local-player" class="local-player" hidden>
+                <div class="track-header">
+                  <span id="track-name"></span
+                  ><button
+                    id="clear-music"
+                    class="icon-button"
+                    aria-label="Audiodatei schließen"
+                  >
+                    <svg><use href="#i-close" /></svg>
+                  </button>
+                </div>
+                <audio id="music-player" controls preload="metadata"></audio
+                ><button id="replace-file" class="replace-file">
+                  Andere Datei öffnen
+                </button>
+              </div>
+            </div>
+            <div
+              id="youtube-panel"
+              role="tabpanel"
+              aria-labelledby="youtube-tab"
+              hidden
+            >
+              <form id="youtube-form">
+                <label for="youtube-url">YouTube-Link</label>
+                <div class="link-input">
+                  <input
+                    id="youtube-url"
+                    type="url"
+                    placeholder="https://www.youtube.com/watch?v=…"
+                    autocomplete="off"
+                    required
+                  /><button
+                    class="icon-button"
+                    type="submit"
+                    aria-label="YouTube laden"
+                  >
+                    <svg><use href="#i-play" /></svg>
+                  </button>
+                </div>
+                <p class="youtube-consent">
+                  Mit „Laden“ verbindest du dich mit YouTube.
+                </p>
+                <button type="submit" class="button youtube-load">
+                  Video laden
+                </button>
+              </form>
+              <div id="youtube-player"></div>
+              <button id="youtube-close" class="button quiet" hidden>
+                Video schließen
+              </button>
+            </div>
+            <div class="music-footer">
+              <svg><use href="#i-music" /></svg
+              ><span>Musik bleibt außerhalb der Aufnahme.</span>
+            </div>
+          </section>
+        </div>
+        <footer class="page-footer">
+          <span>Ein Raum für eure Stimmen.</span
+          ><button id="help-open">
+            So funktioniert’s <span aria-hidden="true">↗</span>
+          </button>
+        </footer>
+      </main>
+    </div>
+    <dialog id="info-dialog" aria-labelledby="info-title">
+      <div class="dialog-header">
+        <h2 id="info-title">Gut zu wissen</h2>
+        <button id="info-close" class="icon-button" aria-label="Info schließen">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <div class="dialog-body">
+        <h3>Mikrofon & Verstärkung</h3>
+        <p>
+          Aktiviere das Mikrofon und erlaube den Zugriff im Browser. Wähle
+          danach das gewünschte Mikrofon. Der Pegel zeigt dir, ob etwas ankommt.
+          Mit „Weiteres Mikrofon“ kannst du zusätzliche Eingänge nutzen, wenn
+          dein Gerät das unterstützt.
+        </p>
+        <p>
+          Schalte die Verstärkung ein, um deine Stimme über die Lautsprecher zu
+          hören. Starte leise und halte Abstand zwischen Mikrofon und
+          Lautsprecher: Sonst kann es pfeifen. Kopfhörer helfen beim
+          Ausprobieren. Bluetooth kann deutlich verzögern.
+        </p>
+        <h3>Nur eure Stimmen aufnehmen</h3>
+        <p>
+          Aufgenommen werden ausschließlich die ausgewählten Mikrofone, auch bei
+          ausgeschalteter Verstärkung. Musik und YouTube werden nicht digital
+          mitgeschnitten. Was aus Lautsprechern im Raum klingt, kann ein
+          Mikrofon allerdings mithören.
+        </p>
+        <p>
+          Eine Aufnahme endet spätestens nach 15 Minuten oder bei 100 MB.
+          Während der Aufnahme bleiben die Mikrofone fest ausgewählt.
+        </p>
+        <h3>Nur für diesen Moment</h3>
+        <p>
+          Clips und geöffnete Audiodateien bleiben im Arbeitsspeicher dieses
+          Tabs. Keine Uploads, keine Konten, kein Aufnahme-Archiv. Beim Neuladen
+          oder Schließen verschwinden sie. Nur „Herunterladen“ speichert einen
+          Clip als Datei auf deinem Gerät. Zum Abspielen kann der Browser intern
+          temporäre Daten verwalten.
+        </p>
+        <p>
+          Klangraum verwendet keine Analysewerkzeuge, Cookies oder dauerhafte
+          Browserspeicher. GitHub Pages stellt die Website bereit und
+          verarbeitet dabei technische Verbindungsdaten. Erst wenn du ein Video
+          lädst, entsteht eine Verbindung zu YouTube. Dort gelten die
+          Datenschutzregeln von YouTube.
+        </p>
+        <h3>Musik & YouTube</h3>
+        <p>
+          Öffne eine Audiodatei oder ziehe sie in das Musikfeld. Unterstützte
+          Formate hängen vom Browser ab. YouTube-Links werden im erweiterten
+          Datenschutzmodus eingebettet. Manche Videos erlauben kein Einbetten;
+          wähle dann ein anderes Video. „Alles stumm“ schaltet die Verstärkung
+          aus und pausiert Musik, Clips und YouTube. Eine laufende Aufnahme geht
+          weiter.
+        </p>
+        <h3>Auf deinem Gerät</h3>
+        <p>
+          Verwende einen aktuellen Browser und die HTTPS-Adresse. Auf
+          Smartphones kann die Mikrofonauswahl eingeschränkt sein. Bleibe für
+          Aufnahmen in diesem Tab und lasse das Display an. Bei einem Anruf,
+          Gerätesperre oder Wechsel der Audioausgabe kann der Browser den Ton
+          unterbrechen. Unterbrochene Aufnahmen werden beendet; prüfe danach den
+          Clip.
+        </p>
+      </div>
+      <button id="info-done" class="button primary">Alles klar</button>
+    </dialog>
+  </body>
+</html>
