@@ -9,6 +9,8 @@ Ein kleines, deutschsprachiges Audio-Pult für Computer, Smartphone und Schultou
 - Nur Mikrofonstimmen aufnehmen; Clips anhören, benennen, löschen und ausdrücklich herunterladen
 - Lokale Audiodateien abspielen und YouTube-Videos nach einem bewussten Klick einbetten
 - Keine Uploads, Analysewerkzeuge, Konten oder dauerhaften Browserspeicher
+- Helles und dunkles Design: folgt zunächst dem System, umschaltbar neben Info; die Wahl bleibt nur im aktuellen Tab
+- Eigene Datenschutzerklärung unter `datenschutz.html` und verlinktes Impressum
 
 ## Starten
 

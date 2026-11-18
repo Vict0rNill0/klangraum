@@ -13,6 +13,7 @@
       content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self' blob:; frame-src https://www.youtube-nocookie.com; connect-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'"
     />
     <title>Klangraum · Mikrofon & Musik</title>
+    <script src="./theme.js"></script>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./style.css" />
     <script src="./app.js" type="module"></script>
@@ -56,6 +57,15 @@
           <circle cx="12" cy="12" r="9" />
           <path d="M12 11v6M12 7v1" />
         </symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24">
+          <path d="M20.8 13a9 9 0 0 1-9.8-9.8A9 9 0 1 0 20.8 13Z" />
+        </symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4" />
+          <path
+            d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
+          />
+        </symbol>
       </defs>
     </svg>
     <div class="app-shell">
@@ -66,6 +76,14 @@
           >Klangraum<span class="brand-dot">.</span></a
         >
         <div class="header-actions">
+          <button
+            id="theme-toggle"
+            class="button quiet theme-button"
+            aria-label="Dunklen Modus einschalten"
+            aria-pressed="false"
+          >
+            <svg aria-hidden="true"><use href="#i-moon" /></svg>
+          </button>
           <button id="info-open" class="button quiet" aria-label="Info">
             <svg><use href="#i-info" /></svg><span>Info</span>
           </button>
@@ -238,7 +256,11 @@
                   </button>
                 </div>
                 <p class="youtube-consent">
-                  Mit „Laden“ verbindest du dich mit YouTube.
+                  Mit „Video laden“ erlaubst du die Verbindung zu YouTube (auch
+                  USA).
+                  <a href="./datenschutz.html" target="_blank" rel="noopener"
+                    >Datenschutz</a
+                  >
                 </p>
                 <button type="submit" class="button youtube-load">
                   Video laden
@@ -256,9 +278,16 @@
           </section>
         </div>
         <footer class="page-footer">
-          <span>Made by Victor Nilo</span>
+          <span>Made by VictoNillo</span>
           <nav class="footer-links" aria-label="Weitere Informationen">
             <button id="help-open">So funktioniert’s</button>
+            <a
+              href="./datenschutz.html"
+              target="_blank"
+              rel="noopener"
+              aria-label="Datenschutz (neuer Tab)"
+              >Datenschutz</a
+            >
             <a
               href="https://victornillo.com/web-legal-information/impressum.html"
               target="_blank"

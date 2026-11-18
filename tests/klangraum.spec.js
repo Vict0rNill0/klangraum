@@ -40,7 +40,7 @@ test("German interface, info dialog, responsive layouts, and no external request
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
   await expect(page.locator("#silence, .intro, .session-tag")).toHaveCount(0);
   await expect(
-    page.getByText("Made by Victor Nilo", { exact: true }),
+    page.getByText("Made by VictoNillo", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Impressum (neuer Tab)" }),
@@ -88,6 +88,58 @@ test("German interface, info dialog, responsive layouts, and no external request
       cookies: document.cookie,
     })),
   ).toEqual({ local: 0, session: 0, cookies: "" });
+});
+
+test("theme follows the system, toggles by keyboard without storage, and privacy opens separately", async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  const button = page.getByRole("button", { name: "Hellen Modus einschalten" });
+  await button.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(
+    page.getByRole("button", { name: "Dunklen Modus einschalten" }),
+  ).toHaveAttribute("aria-pressed", "false");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  expect(
+    await page.evaluate(() => [
+      localStorage.length,
+      sessionStorage.length,
+      document.cookie,
+    ]),
+  ).toEqual([0, 0, ""]);
+  for (const width of [1440, 390, 320]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  }
+  const popupPromise = page.waitForEvent("popup");
+  await page
+    .getByRole("link", { name: "Datenschutz (neuer Tab)", exact: true })
+    .click();
+  const privacy = await popupPromise;
+  await privacy.emulateMedia({ colorScheme: "dark" });
+  await expect(
+    privacy.getByRole("heading", { name: "Datenschutzerklärung", exact: true }),
+  ).toBeVisible();
+  await expect(
+    privacy.getByRole("heading", {
+      name: "YouTube erst nach deiner Entscheidung",
+    }),
+  ).toBeVisible();
+  await expect(privacy.locator("iframe, audio, canvas")).toHaveCount(0);
+  await privacy
+    .getByRole("button", { name: "Hellen Modus einschalten" })
+    .click();
+  await expect(privacy.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
 test("local music plays, closing pauses it, and reload discards it", async ({

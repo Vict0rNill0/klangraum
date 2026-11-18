@@ -2,7 +2,7 @@
 
 ## Automated browser checks (2026-11-18)
 
-19 applicable checks passed across Chromium, Firefox and WebKit. Two WebKit recording checks are explicitly skipped: Playwright's Linux WebKit build does not expose `MediaRecorder`. Its disabled recording state is checked. This is not a physical Safari/iPhone test.
+22 applicable checks passed across Chromium, Firefox and WebKit. Two WebKit recording checks are explicitly skipped: Playwright's Linux WebKit build does not expose `MediaRecorder`. Its disabled recording state is checked. This is not a physical Safari/iPhone test.
 
 | Check                                                                                     | Chromium | Firefox | Linux WebKit              |
 | ----------------------------------------------------------------------------------------- | -------- | ------- | ------------------------- |
@@ -18,7 +18,7 @@ Microphones are synthetic: Chromium/Firefox use browser fake devices for the mai
 
 Desktop and mobile screenshots were reviewed. No horizontal overflow at 320, 390, 1440 or 1920 px.
 
-The simplified header contains only the brand and Info control. The introductory slogans and global mute control have been removed. Footer credit and the existing German Impressum link are checked alongside the responsive layout.
+The simplified header contains the brand, a keyboard-accessible sun/moon theme switch and Info. The introductory slogans and global mute control have been removed. Footer credit, the existing German Impressum link, and the app-specific privacy page are checked alongside the responsive layout. Theme tests cover system dark mode, explicit light mode, reset on reload, no persistent storage, and a separate privacy tab with its own theme control.
 
 ## Live deployment
 
