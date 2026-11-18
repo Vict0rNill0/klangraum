@@ -18,6 +18,10 @@ Microphones are synthetic: Chromium/Firefox use browser fake devices for the mai
 
 Desktop and mobile screenshots were reviewed. No horizontal overflow at 320, 390, 1440 or 1920 px.
 
+## Live deployment
+
+GitHub Pages deployed successfully to <https://victornillo.com/klangraum/> with HTTPS enforced. A live Chromium smoke test connected a synthetic microphone, recorded and played a clip, verified the mobile layout, and found no JavaScript errors or external startup requests. A real YouTube embed loaded its title and thumbnail. Full YouTube streaming was not confirmed in headless testing and remains part of the real-device check below.
+
 ## Running the checks
 
 ```sh

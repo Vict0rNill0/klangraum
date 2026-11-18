@@ -572,6 +572,25 @@ function youtubeCommand(command) {
       "https://www.youtube-nocookie.com",
     );
 }
+let youtubeHandshake;
+function stopYouTubeHandshake() {
+  clearInterval(youtubeHandshake);
+}
+window.addEventListener("message", (event) => {
+  const frame = $("youtube-player").querySelector("iframe");
+  if (
+    event.origin !== "https://www.youtube-nocookie.com" ||
+    event.source !== frame?.contentWindow
+  )
+    return;
+  try {
+    const message =
+      typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+    if (message?.event === "onReady") stopYouTubeHandshake();
+  } catch {
+    /* Ignore unrelated messages from the embedded player. */
+  }
+});
 $("youtube-form").addEventListener("submit", (event) => {
   event.preventDefault();
   const id = youtubeId($("youtube-url").value.trim());
@@ -583,14 +602,30 @@ $("youtube-form").addEventListener("submit", (event) => {
   const iframe = document.createElement("iframe");
   iframe.title = "YouTube-Videoplayer";
   iframe.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&playsinline=1&rel=0&origin=${encodeURIComponent(location.origin)}`;
-  iframe.allow = "encrypted-media; picture-in-picture; fullscreen";
+  iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
   iframe.allowFullscreen = true;
   iframe.referrerPolicy = "strict-origin-when-cross-origin";
+  stopYouTubeHandshake();
+  // The embedded API needs a listening handshake before it reliably accepts
+  // pause commands. No external API script or connection is needed at startup.
+  iframe.addEventListener("load", () => {
+    let attempts = 0;
+    const listen = () => {
+      iframe.contentWindow?.postMessage(
+        JSON.stringify({ event: "listening", id: "klangraum" }),
+        "https://www.youtube-nocookie.com",
+      );
+      if (++attempts >= 40) stopYouTubeHandshake();
+    };
+    youtubeHandshake = setInterval(listen, 250);
+    listen();
+  });
   $("youtube-player").replaceChildren(iframe);
   $("youtube-close").hidden = false;
   notice("");
 });
 $("youtube-close").addEventListener("click", () => {
+  stopYouTubeHandshake();
   $("youtube-player").replaceChildren();
   $("youtube-close").hidden = true;
 });
@@ -683,6 +718,7 @@ window.addEventListener("beforeunload", (event) => {
   }
 });
 window.addEventListener("pagehide", () => {
+  stopYouTubeHandshake();
   setMonitor(false);
   if (state.recording) stopRecording();
   for (const id of [...state.inputs.keys()]) disconnectInput(id);

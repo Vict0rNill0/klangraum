@@ -84,13 +84,11 @@ test("local music plays, all-mute pauses it, and reload discards it", async ({
   page,
 }) => {
   await page.goto("/");
-  await page
-    .locator("#music-file")
-    .setInputFiles({
-      name: "Testton.wav",
-      mimeType: "audio/wav",
-      buffer: wavBuffer(),
-    });
+  await page.locator("#music-file").setInputFiles({
+    name: "Testton.wav",
+    mimeType: "audio/wav",
+    buffer: wavBuffer(),
+  });
   await expect(page.locator("#track-name")).toHaveText("Testton.wav");
   await page.locator("#music-player").evaluate((audio) => audio.play());
   await expect
@@ -115,7 +113,7 @@ test("YouTube is opt-in, validates hosts, supports common links and pauses on mu
   await page.route("https://www.youtube-nocookie.com/**", (route) =>
     route.fulfill({
       contentType: "text/html",
-      body: '<!doctype html><title>Mock YouTube</title><script>window.addEventListener("message",e=>{window.lastCommand=JSON.parse(e.data)})</script>',
+      body: '<!doctype html><title>Mock YouTube</title><script>window.addEventListener("message",e=>{const data=JSON.parse(e.data);if(data.event==="listening")parent.postMessage(JSON.stringify({event:"onReady"}),e.origin);else window.lastCommand=data})</script>',
     }),
   );
   await page.goto("/");
@@ -296,13 +294,11 @@ test("recording excludes local music when the microphone is silent", async ({
   );
   await page.getByRole("button", { name: "Mikrofon aktivieren" }).click();
   await expect(page.locator("#mic-status")).toHaveText("1 aktiv");
-  await page
-    .locator("#music-file")
-    .setInputFiles({
-      name: "Testton.wav",
-      mimeType: "audio/wav",
-      buffer: wavBuffer(),
-    });
+  await page.locator("#music-file").setInputFiles({
+    name: "Testton.wav",
+    mimeType: "audio/wav",
+    buffer: wavBuffer(),
+  });
   await page.locator("#music-player").evaluate((audio) => {
     audio.loop = true;
     return audio.play();
