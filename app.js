@@ -629,16 +629,6 @@ $("youtube-close").addEventListener("click", () => {
   $("youtube-player").replaceChildren();
   $("youtube-close").hidden = true;
 });
-$("silence").addEventListener("click", () => {
-  setMonitor(false);
-  document.querySelectorAll("audio").forEach((audio) => audio.pause());
-  youtubeCommand("pauseVideo");
-  notice(
-    state.recording
-      ? "Alles stumm. Deine Aufnahme läuft weiter."
-      : "Alles stumm.",
-  );
-});
 for (const id of ["info-open", "help-open"])
   $(id).addEventListener("click", () => $("info-dialog").showModal());
 for (const id of ["info-close", "info-done"])

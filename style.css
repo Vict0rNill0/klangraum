@@ -144,39 +144,19 @@ svg {
 .quiet:hover {
   background: var(--purple-soft);
 }
-.silence {
-  background: var(--ink);
-  color: white;
+main {
+  padding-top: 28px;
 }
-.silence:hover {
-  background: #423759;
-}
-.intro {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 44px 0 28px;
-  gap: 16px;
-}
-h1 {
-  font-size: clamp(24px, 2.6vw, 37px);
-  letter-spacing: -1.2px;
-  margin: 0;
-  font-weight: 700;
-}
-.session-tag {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--muted);
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
   white-space: nowrap;
-}
-.session-tag > span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--purple);
+  border: 0;
 }
 .desk {
   display: grid;
@@ -673,20 +653,29 @@ audio {
   margin: 25px 0 40px;
   color: var(--muted);
   font-size: 11px;
+  flex-wrap: wrap;
+  gap: 8px 20px;
 }
-.page-footer button {
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.page-footer button,
+.page-footer a {
   background: transparent;
   border: 0;
-  color: var(--muted);
+  color: inherit;
   padding: 12px 0;
   min-height: 44px;
-  font-size: 11px;
+  font-size: inherit;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
 }
-.page-footer button:hover {
+.page-footer button:hover,
+.page-footer a:hover {
   color: var(--purple);
-}
-.page-footer button span {
-  margin-left: 5px;
 }
 .notice {
   background: #fff2d3;
@@ -742,9 +731,6 @@ dialog::backdrop {
   margin-top: 15px;
 }
 @media (min-width: 1500px) {
-  .intro {
-    margin-top: 65px;
-  }
   .desk {
     gap: 28px;
   }
@@ -779,12 +765,6 @@ dialog::backdrop {
   }
   .range-row label {
     grid-column: 1/-1;
-  }
-  .intro {
-    margin-top: 32px;
-  }
-  h1 {
-    font-size: 29px;
   }
 }
 @media (max-width: 850px) {
@@ -845,28 +825,8 @@ dialog::backdrop {
     padding: 10px;
     min-height: 44px;
   }
-  .header-actions .quiet span {
-    display: none;
-  }
-  .silence {
-    font-size: 11px;
-    gap: 6px;
-  }
-  .silence svg {
-    width: 18px;
-    height: 18px;
-  }
-  .intro {
-    margin: 29px 0 20px;
-    display: block;
-  }
-  h1 {
-    font-size: 27px;
-    letter-spacing: -1px;
-  }
-  .session-tag {
-    margin-top: 11px;
-    font-size: 11px;
+  main {
+    padding-top: 20px;
   }
   .desk {
     grid-template-columns: 1fr;
@@ -909,12 +869,6 @@ dialog::backdrop {
   padding: 0;
 }
 @media (max-width: 360px) {
-  .silence span {
-    display: none;
-  }
-  .header-actions .silence {
-    min-width: 44px;
-  }
   .brand {
     font-size: 24px;
   }

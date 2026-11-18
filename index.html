@@ -34,9 +34,6 @@
             d="m11 4-6 5H2v6h3l6 5zM15 8a6 6 0 0 1 0 8M18 4a11 11 0 0 1 0 16"
           />
         </symbol>
-        <symbol id="i-mute" viewBox="0 0 24 24">
-          <path d="m11 4-6 5H2v6h3l6 5zM16 9l6 6M22 9l-6 6" />
-        </symbol>
         <symbol id="i-plus" viewBox="0 0 24 24">
           <path d="M12 5v14M5 12h14" />
         </symbol>
@@ -70,18 +67,13 @@
         >
         <div class="header-actions">
           <button id="info-open" class="button quiet" aria-label="Info">
-            <svg><use href="#i-info" /></svg><span>Info</span></button
-          ><button id="silence" class="button silence" aria-label="Alles stumm">
-            <svg><use href="#i-mute" /></svg><span>Alles stumm</span>
+            <svg><use href="#i-info" /></svg><span>Info</span>
           </button>
         </div>
       </header>
 
       <main>
-        <div class="intro">
-          <h1>Dein Moment. Dein Sound.</h1>
-          <span class="session-tag"><span></span>Hier & jetzt</span>
-        </div>
+        <h1 class="sr-only">Klangraum</h1>
         <div id="notice" class="notice" role="status" hidden></div>
         <div class="desk">
           <section class="panel microphone" aria-labelledby="mic-heading">
@@ -264,10 +256,17 @@
           </section>
         </div>
         <footer class="page-footer">
-          <span>Ein Raum für eure Stimmen.</span
-          ><button id="help-open">
-            So funktioniert’s <span aria-hidden="true">↗</span>
-          </button>
+          <span>Made by Victor Nilo</span>
+          <nav class="footer-links" aria-label="Weitere Informationen">
+            <button id="help-open">So funktioniert’s</button>
+            <a
+              href="https://victornillo.com/web-legal-information/impressum.html"
+              target="_blank"
+              rel="noopener"
+              aria-label="Impressum (neuer Tab)"
+              >Impressum</a
+            >
+          </nav>
         </footer>
       </main>
     </div>
@@ -323,9 +322,7 @@
           Öffne eine Audiodatei oder ziehe sie in das Musikfeld. Unterstützte
           Formate hängen vom Browser ab. YouTube-Links werden im erweiterten
           Datenschutzmodus eingebettet. Manche Videos erlauben kein Einbetten;
-          wähle dann ein anderes Video. „Alles stumm“ schaltet die Verstärkung
-          aus und pausiert Musik, Clips und YouTube. Eine laufende Aufnahme geht
-          weiter.
+          wähle dann ein anderes Video.
         </p>
         <h3>Auf deinem Gerät</h3>
         <p>

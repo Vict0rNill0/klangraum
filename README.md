@@ -24,7 +24,7 @@ Clips und Audiodateien werden nur über flüchtige JavaScript-Objekte und Blob-U
 
 Eine Aufnahme endet nach 15 Minuten, 100 MB oder bei erkannter Mikrofon-/Audio-Unterbrechung. Downloadformat ist browserabhängig: üblicherweise WebM/Opus in Chromium/Firefox, M4A in Safari. Kein MP3-Encoding. Mikrofone können Schall aus Lautsprechern akustisch mit aufnehmen.
 
-Verstärkung startet ausgeschaltet mit 25 % Lautstärke. Abstand/Kopfhörer helfen gegen Rückkopplung. „Alles stumm“ deaktiviert Verstärkung und pausiert alle Player, beendet aber keine laufende Aufnahme.
+Verstärkung startet ausgeschaltet mit 25 % Lautstärke. Abstand/Kopfhörer helfen gegen Rückkopplung. Die Verstärkung wird über ihren eigenen Schalter gesteuert; Musik und Clips über ihre jeweiligen Player. Das Impressum ist dezent im Footer verlinkt und öffnet die bestehende rechtliche Anbieterinformation von Victornillo.com in einem neuen Tab.
 
 ## Browser
 

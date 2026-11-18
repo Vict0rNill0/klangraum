@@ -7,7 +7,7 @@
 | Check                                                                                     | Chromium | Firefox | Linux WebKit              |
 | ----------------------------------------------------------------------------------------- | -------- | ------- | ------------------------- |
 | German UI, dialog, 320–1920 px layouts, no external startup traffic or persistent storage | Pass     | Pass    | Pass                      |
-| Local WAV playback, global pause, reload cleanup                                          | Pass     | Pass    | Pass                      |
+| Local WAV playback, file close, reload cleanup                                            | Pass     | Pass    | Pass                      |
 | Opt-in YouTube embedding, URL validation, pause command, close                            | Pass     | Pass    | Pass                      |
 | Denied microphone permission and safe control state                                       | Pass     | Pass    | Pass                      |
 | Record audible microphone, decode audio, play, rename, download, delete, reload           | Pass     | Pass    | Unsupported in test build |
@@ -17,6 +17,8 @@
 Microphones are synthetic: Chromium/Firefox use browser fake devices for the main recording check; multiple inputs and isolation use Web Audio-generated streams. A deterministic mock models hardware disconnection during recording in Chromium/Firefox. YouTube iframe messaging is tested against a controlled embedded fixture, independent of internet availability or individual video restrictions.
 
 Desktop and mobile screenshots were reviewed. No horizontal overflow at 320, 390, 1440 or 1920 px.
+
+The simplified header contains only the brand and Info control. The introductory slogans and global mute control have been removed. Footer credit and the existing German Impressum link are checked alongside the responsive layout.
 
 ## Live deployment
 

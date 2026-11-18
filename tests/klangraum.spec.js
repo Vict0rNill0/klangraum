@@ -38,6 +38,16 @@ test("German interface, info dialog, responsive layouts, and no external request
   });
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
+  await expect(page.locator("#silence, .intro, .session-tag")).toHaveCount(0);
+  await expect(
+    page.getByText("Made by Victor Nilo", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Impressum (neuer Tab)" }),
+  ).toHaveAttribute(
+    "href",
+    "https://victornillo.com/web-legal-information/impressum.html",
+  );
   await expect(
     page.getByRole("button", { name: "Aufnahme starten" }),
   ).toBeDisabled();
@@ -80,7 +90,7 @@ test("German interface, info dialog, responsive layouts, and no external request
   ).toEqual({ local: 0, session: 0, cookies: "" });
 });
 
-test("local music plays, all-mute pauses it, and reload discards it", async ({
+test("local music plays, closing pauses it, and reload discards it", async ({
   page,
 }) => {
   await page.goto("/");
@@ -98,7 +108,7 @@ test("local music plays, all-mute pauses it, and reload discards it", async ({
         .evaluate((audio) => !audio.paused && audio.currentTime > 0),
     )
     .toBe(true);
-  await page.getByRole("button", { name: "Alles stumm" }).click();
+  await page.getByRole("button", { name: "Audiodatei schließen" }).click();
   expect(
     await page.locator("#music-player").evaluate((audio) => audio.paused),
   ).toBe(true);
@@ -107,7 +117,7 @@ test("local music plays, all-mute pauses it, and reload discards it", async ({
   expect(await page.locator("#music-player").getAttribute("src")).toBeNull();
 });
 
-test("YouTube is opt-in, validates hosts, supports common links and pauses on mute", async ({
+test("YouTube is opt-in, validates hosts, supports common links and pauses on tab change", async ({
   page,
 }) => {
   await page.route("https://www.youtube-nocookie.com/**", (route) =>
@@ -147,10 +157,11 @@ test("YouTube is opt-in, validates hosts, supports common links and pauses on mu
     );
   }
   await expect.poll(() => page.frames().length).toBe(2);
-  await page.getByRole("button", { name: "Alles stumm" }).click();
+  await page.getByRole("tab", { name: "Audiodatei" }).click();
   await expect
     .poll(() => page.frames()[1].evaluate(() => window.lastCommand?.func))
     .toBe("pauseVideo");
+  await page.getByRole("tab", { name: "YouTube" }).click();
   await page.getByRole("button", { name: "Video schließen" }).click();
   expect(await page.locator("iframe").count()).toBe(0);
 });
@@ -223,7 +234,7 @@ test("microphone records an audible clip, plays, downloads, deletes, and clears 
   ).toBeEnabled();
   await expect(page.locator(".mic-select")).toBeDisabled();
   await page.waitForTimeout(1700);
-  await page.getByRole("button", { name: "Alles stumm" }).click();
+  await page.getByRole("switch", { name: "Verstärkung" }).click();
   await expect(page.getByRole("switch")).toHaveAttribute(
     "aria-checked",
     "false",
